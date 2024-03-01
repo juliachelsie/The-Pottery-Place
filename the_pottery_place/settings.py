@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-k(l$q^!oi(irlof*^fk_kvszur37c9i@g-lk8l-njf1^)yxvzj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['8000-juliachelsie-the-pottery-d0r8k0llnj.us2.codeanyapp.com']
+ALLOWED_HOSTS = ['8000-juliachelsie-the-pottery-cginp0mkmm.us1.codeanyapp.com']
 
 
 # Application definition
