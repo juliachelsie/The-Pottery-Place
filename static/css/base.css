@@ -1,0 +1,52 @@
+html {
+    height: 100%;
+}
+
+body {
+    background: url('/media/background-vase.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: calc(100vh - 164px);
+    color: #555;
+    font-family: "Montserrat", sans-serif;
+}
+
+.logo-font {
+    text-transform: uppercase;
+}
+
+.shop-button {
+    background: black;
+    color: white;
+    min-width: 260px;
+}
+
+.btn-black {
+    background: black;
+    color: white;
+}
+
+.shop-button:hover,
+.shop-button:active,
+.shop-button:focus,
+.btn-black:hover,
+.btn-black:active,
+.btn-black:focus {
+    background: #222;
+    color: white;
+}
+
+.text-black {
+    color: #000 !important;
+}
+
+.icon {
+    width: 1rem;
+    height: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-link {
+    width: fit-content
+}
