@@ -53,7 +53,7 @@
               <div class="input-group-append">
                 <button class="form-control btn btn-black border border-black rounded-0" type="submit">
                   <span class="icon">
-                    <i class="fas fas-search"></i>
+                    <i class="fa-light fa-magnifying-glass" style="color: #ffffff;"></i>
                   </span>
                 </button>
               </div>
@@ -69,7 +69,7 @@
                   <p class="my-0">My Account</p>
                 </div>
               </a>
-              <div class="dropdown-menu border-0" aria-labelledby="user-optins">
+              <div class="dropdown-menu border-0" aria-labelledby="user-options">
                 {% if request.user.is_authenticated %}
                   {% if request.user.is_superuser %}
                     <a href="" class="dropdown-item">Product Management</a>
@@ -98,6 +98,15 @@
             </li>
           </ul>
         </div>
+      </div>
+      <div class="row bg-body">
+        <nav class="navbar navbar-expand-lg navbar-light w-100">
+          <button class="navbar-toggler" type="button" data-toggler="collapse" data-target="#main-nav" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle Navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+          {% include 'includes/mobile_header.html' %}
+          {% include 'includes/main_nav.html' %}
+      </nav>
       </div>
     </header>
 
