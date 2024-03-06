@@ -36,7 +36,7 @@ body {
 }
 
 .text-black {
-    color: #f7f1f1 !important;
+    color: white !important;
 }
 
 .icon {
@@ -47,7 +47,7 @@ body {
     justify-content: center;
 }
 
-.main-logo-link {
+.logo-link {
     width: fit-content;
 }
 
