@@ -51,6 +51,16 @@ body {
     width: fit-content;
 }
 
+.overlay {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: -1;
+    background: #C8B397;
+    top: 0;
+    left: 0;
+}
+
 /* Media Queries */
 
 /* Slightly larger container on xl screens */
