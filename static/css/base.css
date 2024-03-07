@@ -10,7 +10,7 @@ body {
     font-family: "Montserrat", sans-serif;
 }
 
-.logo-font {
+.logo {
     text-transform: uppercase;
 }
 
@@ -84,3 +84,15 @@ body {
           padding-top: 164px;
       }
   }
+
+/* Add padding to the top of the page when the navbar is collapsed on mobile */
+
+@media (max-width:990px) {
+    .header-container {
+        padding-top: 115px;
+    }
+
+    body {
+        height: calc(100vh - 115px);
+    }
+}
