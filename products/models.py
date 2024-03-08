@@ -4,7 +4,7 @@ from django.db import models
  
 class Product(models.Model):
     name = models.CharField(max_length=200)
-    category = models.ForeignKey('Category', null=True, blank=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey('Category', related_name='search_box', null=True, blank= True, on_delete=models.SET_NULL)
     description = models.TextField()
     sku = models.CharField(max_length=200, null=True, blank=True)
     rating = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
