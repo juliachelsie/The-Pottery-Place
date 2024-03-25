@@ -24,12 +24,13 @@
                 {% if shoppingbag_items %}
                 <div class="table-responsive rounded"></div>
                 {% else %}
-                <p class="lead mb-5 text-white">You do not have anything in your bag yet.</p>
+                <p class="lead mb-5 text-white">Your shopping bag is empty.
+                </p>
                 <a href="{% url 'products' %}" class="btn btn-outline-black btn-lg rounded-0">
                     <span class="icon">
-                        <i class="fas fa-chevron-left"></i>
+                        <i class="fa-solid fa-caret-left" style="color: #ffffff;"></i>
                     </span>
-                    <span class="text-uppercase text-white">Continue shopping!</span>
+                    <span class="text-white">Continue shopping!</span>
                 </a>
                 {% endif %}
             </div>
