@@ -87,7 +87,12 @@
                 {% else %}
                 <p class="lead mb-5 text-white">Your shopping bag is empty.
                 </p>
-                
+                <a href="{% url 'products' %}" class="btn btn-outline-black rounded-0 btn-lg">
+                    <span class="icon">
+                        <i class="fa-solid fa-caret-left" style="color: #ffffff;"></i>
+                    </span>
+                    <span class="text-white">Keep Shopping</span>
+                </a>
                 {% endif %}
             </div>
         </div>
