@@ -78,6 +78,13 @@ body {
     height: 3px;
 }
 
+.shoppingbag-wrapper {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100px;
+
+}
+
 /* Media Queries */
 
 /* Slightly larger container on xl screens */

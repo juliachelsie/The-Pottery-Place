@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, reverse, HttpResponse
+from django.shortcuts import render, redirect, reverse, HttpResponse, get_object_or_404
 from django.contrib import messages
 
 from products.models import Product
@@ -12,13 +12,14 @@ def view_shoppingbag(request):
 
 def add_bag(request, item_id):
     """ A view to add a quantity of a specified product to shopping bag """
-    product = Product.objects.get(pk=item_id)
+    product = get_object_or_404(Product,pk=item_id)
     quantity = int(request.POST.get('quantity'))
     redirect_url = request.POST.get('redirect_url')
     shoppingbag = request.session.get('shoppingbag', {})
 
     if item_id in list(shoppingbag.keys()):
         shoppingbag[item_id] += quantity
+
     else:
         shoppingbag[item_id] = quantity
         messages.success(request, f'Successfully added {product.name} to your bag.')
@@ -29,6 +30,7 @@ def add_bag(request, item_id):
 
 def modify_bag(request, item_id):
     """ Modify the quantity of a product in the shoppingbag """
+    product = get_object_or_404(Product,pk=item_id)
     quantity = int(request.POST.get('quantity'))
     shoppingbag = request.session.get('shoppingbag', {})
     
@@ -39,6 +41,8 @@ def modify_bag(request, item_id):
         del bag[item_id]
         if not shoppingbag[item_id]:
             shoppingbag.pop(item_id)
+            messages.success(request, f'Successfully updated {product.name} in your bag.')
+            
         
 
     request.session['shoppingbag'] = shoppingbag

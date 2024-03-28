@@ -8,6 +8,13 @@
         </button>
     </div>
     <div class="toast-body bg-white">
-        {{ message }}
+        <div class="row">
+            <div class="col">
+                {{ message }}
+            </div>
+        </div>
+        {% if grand_total %}
+            <p class="logo-font bg-white text-black py-1">Your shoppingbag ({{  }})</p>
+        {% endif %}
     </div>
-</div>
+</div> 
