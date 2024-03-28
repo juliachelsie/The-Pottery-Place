@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load shoppingbag_tools %}
 
 {% block page_header %}
     <div class="container header-container">
@@ -47,10 +48,36 @@
                                 <p class="my-0">${{ item.product.price }}</p>
                             </td>
                             <td class="py-3 w-25">
-                                <p class="my-0">{{ item.quantity }}</p>
+                                <form action="{% url 'modify_bag' item.item_id %}" method="POST" class="form update-form">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <button class="minus-qty btn btn-sm btn-black rounded-0" data-item_id="{{ item.item_id }}" 
+                                                id="minus-qty_{{ item.item_id }}">
+                                                    <span>
+                                                        <i class="fas fa-minus fa-sm"></i>
+                                                    </span>
+                                                </button>
+                                            </div>
+                                            <input type="number" name="quantity" min="1" max="99" value="{{ item.quantity }}"
+                                                class="form-control form-control-sm qty_input" id="id_qty_{{ item.item_id }}" 
+                                                data-item_id="{{ item.item_id }}">
+                                            <div class="input-group-append">
+                                                <button class="plus-qty btn btn-sm btn-black rounded-0" id="plus-qty_{{ item.item_id }}">
+                                                    <span>
+                                                        <i class="fas fa-plus fa-sm"></i>
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <a href="" class="update-button">Update</a>
+                                <a id="remove_{{ item.item_id }}" href="" class="remove-button text-danger float-right">Remove</a>
                             </td>
                             <td class="py-3">
-                                <p class="my-0">{{ item.product.price }}</p>
+                                <p class="my-0">{{ item.product.price | calculate_sub_total:item.quantity }}</p>
                             </td>
                         </tr>
                         {% endfor %}
@@ -97,4 +124,30 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block postloadjs %}
+{{ block.super }}
+{% include 'products/includes/quantity_script.html' %}
+
+<script type="text/javascript">
+
+    // Update item
+    $('update-button').click(function(e) {
+        var form = $(this).prev('.update-button');
+        form.submit();
+    })
+
+    // Reomve item
+    $('remove-button').click(function(e) {
+        var csrftoken = "{{ csrf_token }}";
+        var itemid = $(this).attr('id').split('remove_')[1];
+        var url = `/shoppingbag/remove/${itemid}/`;
+
+        $.post(url)
+        .done(function() {
+            location.reload();
+        });
+    })
+</script>
 {% endblock %}

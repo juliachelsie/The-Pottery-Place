@@ -61,6 +61,22 @@ body {
     left: 0;
 }
 
+/* Toasts */
+
+.message-container {
+    top: 70px;
+    right: 10px;
+    z-index: 9999999999 ;
+    position: fixed;
+}
+
+.custom-toast {
+    overflow: visible;
+}
+
+.toast-cap {
+    height: 3px;
+}
 
 /* Media Queries */
 
