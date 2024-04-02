@@ -8,7 +8,7 @@ from products.models import Product
 # Create your models here.
 
 class Order(models.Model):
-    order_number = models.CharField(max_length=25, editable=False, null=False)
+    order_number = models.CharField(max_length=25, null=False,  editable=False)
     name = models.CharField(max_length=55, null=False, blank=False)
     email = models.EmailField(max_length=240, null=False, blank=False)
     phone = models.CharField(max_length=30, null=False, blank=False)
@@ -49,7 +49,7 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    Order = models.ForeignKey(Order, null=False, blank=False, on_delete=models.CASCADE, related_name='items')
+    Order = models.ForeignKey(Order, null=False, blank=False, on_delete=models.CASCADE, related_name='item')
     product = models.ForeignKey(Product, null=False, blank=False, on_delete=models.CASCADE)
     quantity =models.IntegerField(null=False, blank=False, default=0)
     item_total = models.DecimalField(max_digits=6, decimal_places=2, null=False, blank=False, editable=False)

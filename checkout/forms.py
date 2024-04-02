@@ -22,7 +22,7 @@ class OrderForm(forms.ModelForm):
             'county': 'County',
         }
 
-         self.fields['name'].widget.attrs['autofocus'] = True
+        self.fields['name'].widget.attrs['autofocus'] = True
         for field in self.fields:
             if self.fields[field].required:
                 placeholder = f'{placeholders[field]} *'
