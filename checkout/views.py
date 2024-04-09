@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
 from .forms import OrderForm
 from django.conf import settings
-
+from products.models import Product
 from shoppingbag.contexts import shoppingbag_contents
+from .models import Order, OrderItem
 
 import stripe
 # Create your views here.
@@ -12,21 +13,69 @@ def checkout(request):
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
     stripe_secret_key = settings.STRIPE_SECRET_KEY
 
-    shoppingbag = request.session.get('shoppingbag', {})
-    if not shoppingbag:
-        messages.error(request, "There's nothing in your bag at the moment")
-        return redirect(reverse('products'))
+    if request.method == 'POST':
+        shoppingbag = request.session.get('shoppingbag', {})
 
-    shoppingbag_now = shoppingbag_contents(request)
-    total = shoppingbag_now['grand_total']
-    stripe_total = round(total * 100)
-    stripe.api_key = stripe_secret_key
-    intent = stripe.PaymentIntent.create(
-        amount=stripe_total,
-        currency=settings.STRIPE_CURRENCY,
-    )
+        form_data = {
+            'name': request.POST['name'],
+            'email': request.POST['email'],
+            'phone': request.POST['phone'],
+            'country': request.POST['country'],
+            'post_code': request.POST['post_code'],
+            'city': request.POST['city'],
+            'address': request.POST['address'],
+            'county': request.POST['county'],
+        }
+        order_form = OrderForm(form_data)
+        if order_form.is_valid():
+            order = order_form.save()
+            for item_id, item_data in shoppingbag.items():
+                try:
+                    product = Product.objects.get(id=item_id)
+                    if isinstance(item_data, int):
+                        order_item = OrderItem(
+                            product=product,
+                            quantity=item_data,
+                        )
+                        order_item.save()
+                    else:
+                        for quantity in item_data.items():
+                            order_item = OrderItem(
+                            order=order,
+                            product=product,
+                            quantity=quantity,
+                        )
+                    order_item.save()
 
-    order_form = OrderForm()
+                except Product.DoesNotExist:
+                    messages.error(request, (
+                        "We can't find one or more products in your shopping bag in our data base."
+                        "Please contact us for assistance!")
+                    )
+                    order.delete()
+                    return redirect(reverse('view_shoppingbag'))
+            
+            request.session['save_info'] = 'save_info' in request.POST
+            return redirect(reverse('success_checkout', args=[order.order_number]))  
+        else:
+            messages.error(request, 'A error occured, Please check your information')
+
+    else:
+        shoppingbag = request.session.get('shoppingbag', {})
+        if not shoppingbag:
+            messages.error(request, "There's nothing in your bag at the moment")
+            return redirect(reverse('products'))
+
+        shoppingbag_now = shoppingbag_contents(request)
+        total = shoppingbag_now['grand_total']
+        stripe_total = round(total * 100)
+        stripe.api_key = stripe_secret_key
+        intent = stripe.PaymentIntent.create(
+            amount=stripe_total,
+            currency=settings.STRIPE_CURRENCY,
+        )
+
+        order_form = OrderForm()
 
     if not stripe_public_key:
         messages.warning(request, 'Stripe public key is missing, is it in your environment?')
@@ -38,4 +87,23 @@ def checkout(request):
         'client_secret': intent.client_secret,
     }
 
+    return render(request, template, context)
+
+
+def success_checkout(request, order_number):
+    """Handles successful checkouts"""
+    save_info = request.session.get('save_info')
+    order = get_object_or_404(Order, order_number=order_number)
+    messages.success(request, f'Order successful! \
+        Your order number is {order_number}. A confirmation email \
+            will be sent to {order.email}')
+
+    if 'shoppingbag' in request.session:
+        del request.session['shoppingbag']
+    
+    template = 'checkout/success_checkout.html'
+    context = {
+        'order': order,
+    }
+    
     return render(request, template, context)

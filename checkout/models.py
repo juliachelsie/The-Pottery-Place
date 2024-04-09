@@ -8,7 +8,7 @@ from products.models import Product
 # Create your models here.
 
 class Order(models.Model):
-    order_number = models.CharField(max_length=25, null=False,  editable=False)
+    order_number = models.CharField(max_length=25, null=False, editable=False)
     name = models.CharField(max_length=55, null=False, blank=False)
     email = models.EmailField(max_length=240, null=False, blank=False)
     phone = models.CharField(max_length=30, null=False, blank=False)
@@ -22,14 +22,14 @@ class Order(models.Model):
     order_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
     grand_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
 
-    def create_order_number(self):
+    def _create_order_number(self):
         """Create a unique ordernumber using uuid """
 
         return uuid.uuid4().hex.upper()
 
     def update_total_cost(self):
         """Updates total cost each time a item is added"""
-        self.order_total = self.items.aggregate(Sum('item_total'))['item_total__sum']
+        self.order_total = self.items.aggregate(Sum('item_total'))['item_total__sum'] or 0
         if self.order_total < settings.FREE_DELIVERY_THRESHOLD:
             self.delivery_cost = self.order_total * settings.STANDARD_DELIVERY_PERCENTAGE / 100
         else:
@@ -49,7 +49,7 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    Order = models.ForeignKey(Order, null=False, blank=False, on_delete=models.CASCADE, related_name='item')
+    order = models.ForeignKey(Order, null=False, blank=False, on_delete=models.CASCADE, related_name='item')
     product = models.ForeignKey(Product, null=False, blank=False, on_delete=models.CASCADE)
     quantity =models.IntegerField(null=False, blank=False, default=0)
     item_total = models.DecimalField(max_digits=6, decimal_places=2, null=False, blank=False, editable=False)
