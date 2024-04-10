@@ -34,6 +34,7 @@ def checkout(request):
                     product = Product.objects.get(id=item_id)
                     if isinstance(item_data, int):
                         order_item = OrderItem(
+                            order=order,
                             product=product,
                             quantity=item_data,
                         )
