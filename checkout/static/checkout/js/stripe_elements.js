@@ -54,27 +54,63 @@ form.addEventListener('submit', function(ev) {
     $('#submit-button').attr('disabled', true);
     $('#pay-form').fadeToggle(100);
     $('#loading-overlay').fadeToggle(100);
-    stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-        card: card,
-        }
-    }).then(function(result) {
-        if (result.error) {
-            var errorD = document.getElementById('card-errors');
-            var html = `
-                <span class="icon" role="alert">
-                <i class="fas fa-times"></i>
-                </span>
-                <span>${result.error.message}</span>`;
-            $(errorD).html(html);
-            $('#pay-form').fadeToggle(100);
-            $('#loading-overlay').fadeToggle(100);
-            card.update({ 'disabled': false});
-            $('#submit-button').attr('disabled', false);
-        } else {
-            if (result.paymentIntent.status === 'succeeded') {
-                form.submit();
+
+    var saveInfo = Boolean($('#id-save-info').attr('checked'));
+    var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+    var postData ={
+        'csrfmiddlewaretoken': csrfToken,
+        'client_secret': clientSecret,
+        'save_info': saveInfo,
+    };
+    var url = '/checkout/cache_checkout_data/';
+
+    $.post(url, postData).done(function () {
+        stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+                card: card,
+                billing_details: {
+                    name: $.trim(form.name.value),
+                    phone: $.trim(form.phone.value),
+                    email: $.trim(form.email.value),
+                    address:{
+                        line1: $.trim(form.address.value),
+                        city: $.trim(form.city.value),
+                        country: $.trim(form.country.value),
+                        state: $.trim(form.county.value),
+                    }
+                }
+            },
+            shipping: {
+                name: $.trim(form.name.value),
+                phone: $.trim(form.phone.value),
+                address: {
+                    line1: $.trim(form.address.value),
+                    city: $.trim(form.city.value),
+                    country: $.trim(form.country.value),
+                    postal_code: $.trim(form.post_code.value),
+                    state: $.trim(form.county.value),
+                }
+            
+        },}).then(function(result) {
+            if (result.error) {
+                var errorD = document.getElementById('card-errors');
+                var html = `
+                    <span class="icon" role="alert">
+                    <i class="fas fa-times"></i>
+                    </span>
+                    <span>${result.error.message}</span>`;
+                $(errorD).html(html);
+                $('#pay-form').fadeToggle(100);
+                $('#loading-overlay').fadeToggle(100);
+                card.update({ 'disabled': false});
+                $('#submit-button').attr('disabled', false);
+            } else {
+                if (result.paymentIntent.status === 'succeeded') {
+                    form.submit();
+                }
             }
-        }
-    });
+        });
+    }).fail(function () {
+        location.reload();
+    })
 });
