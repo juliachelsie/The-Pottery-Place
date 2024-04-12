@@ -5,6 +5,8 @@ from django.db.models import Sum
 from django.conf import settings
 from products.models import Product
 
+from django_countries.fields import CountryField
+
 # Create your models here.
 
 class Order(models.Model):
@@ -12,7 +14,7 @@ class Order(models.Model):
     name = models.CharField(max_length=55, null=False, blank=False)
     email = models.EmailField(max_length=240, null=False, blank=False)
     phone = models.CharField(max_length=30, null=False, blank=False)
-    country = models.CharField(max_length=40, blank=False, null=False)
+    country = CountryField(blank_label='Country *', blank=False, null=False)
     post_code = models.CharField(max_length=20, null=True, blank=True)
     city = models.CharField(max_length=50, null=False, blank=False)
     address = models.CharField(max_length=85, blank=False, null=False)
@@ -21,6 +23,8 @@ class Order(models.Model):
     delivery_cost = models.DecimalField(max_digits=6, decimal_places=2, null=False, default=0)
     order_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
     grand_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
+    originalBag = models.TextField(null=False, blank=False, default='')
+    stripe_pid = models.CharField(max_length=254, null=False, blank=False, default='')
 
     def _create_order_number(self):
         """Create a unique ordernumber using uuid """

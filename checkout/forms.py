@@ -19,7 +19,7 @@ class OrderForm(forms.ModelForm):
             'post_code': 'Postal Code',
             'city': 'Town or City',
             'address': 'Street Address',
-            'county': 'County',
+            'county': 'County, State or Locality',
         }
 
         self.fields['name'].widget.attrs['autofocus'] = True
