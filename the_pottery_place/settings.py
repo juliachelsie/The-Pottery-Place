@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-k(l$q^!oi(irlof*^fk_kvszur37c9i@g-lk8l-njf1^)yxvzj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['thepotteryplace.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = ['thepotteryplace.herokuapp.com', 'localhost', 'thepotteryplace-aaf19efb4463.herokuapp.com']
 
 
 # Application definition
