@@ -1,1 +1,1 @@
-web: gunicorn the-pottery-place.wsgi:application
+web: gunicorn thepotteryplace.wsgi:application
